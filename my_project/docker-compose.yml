@@ -1,0 +1,30 @@
+version: "3.8"
+services:
+  frontend:
+    build: ./frontend
+    ports:
+      - "8080:80"  # Change the host port to 8081
+    depends_on:
+      - backend
+
+  backend:
+    build: ./backend
+    ports:
+      - "3000:3000"
+    environment:
+      DATABASE_HOST: database
+      DATABASE_USER: root
+      DATABASE_PASSWORD: example
+      DATABASE_NAME: testdb
+    depends_on:
+      - database
+
+  database:
+    image: mysql:5.7
+    ports:
+      - "3308:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: example
+      MYSQL_DATABASE: testdb
+    volumes:
+      - ./database/init.sql:/docker-entrypoint-initdb.d/init.sql
